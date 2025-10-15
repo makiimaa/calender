@@ -155,5 +155,5 @@ npm run dev
 
 - Backend mặc định chạy trên port **8000**
 - Frontend mặc định chạy trên port **3000**
-- Dữ liệu được lưu trong database `lich_cong_tac` trên MongoDB
+- Dữ liệu được lưu trong database `lich_toanluu` trên MongoDB
 - Hệ thống tự động đồng bộ dữ liệu mỗi 8 giờ
