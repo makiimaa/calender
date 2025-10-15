@@ -1,113 +1,159 @@
-🧾 Lịch Công Tác UBND Xã Toàn Lưu
-🌟 Giới thiệu
+# 🧾 Lịch Công Tác UBND Xã Toàn Lưu
 
-Hệ thống hiển thị lịch công tác hàng ngày và hàng tuần của UBND xã Toàn Lưu.
-Dữ liệu được tự động đồng bộ mỗi giờ từ cổng thông tin điện tử tỉnh Hà Tĩnh.
+## 🌟 Giới thiệu
 
-Gồm hai phần chính:
+Hệ thống hiển thị lịch công tác hàng ngày và hàng tuần của UBND xã Toàn Lưu.  
+Dữ liệu được tự động đồng bộ mỗi 8 giờ từ cổng thông tin điện tử tỉnh Hà Tĩnh.
 
-🖥 Frontend: Giao diện hiển thị lịch (Next.js)
+**Gồm hai phần chính:**
 
-⚙️ Backend: API FastAPI thu thập & lưu dữ liệu vào MongoDB
+- 🖥 **Frontend**: Giao diện hiển thị lịch (Next.js)
+- ⚙️ **Backend**: API FastAPI thu thập & lưu dữ liệu vào MongoDB
 
-⚙️ Yêu cầu hệ thống
-Thành phần Phiên bản khuyến nghị
-Python ≥ 3.10
-Node.js + npm ≥ 18.x
-MongoDB Community Server ≥ 7.x
-🐍 1. Cài đặt Backend (FastAPI)
-📁 Cấu trúc thư mục:
+---
+
+## ⚙️ Yêu cầu hệ thống
+
+| Thành phần               | Phiên bản khuyến nghị |
+| ------------------------ | --------------------- |
+| Python                   | ≥ 3.10                |
+| Node.js + npm            | ≥ 18.x                |
+| MongoDB Community Server | ≥ 7.x                 |
+
+---
+
+## 🐍 1. Cài đặt Backend (FastAPI)
+
+### 📁 Cấu trúc thư mục
+
+```
 backend/
 ├── main.py
 ├── models.py
 ├── scraper.py
-├── requirements.txt ← sẽ tạo ngay bên dưới
+└── requirements.txt
+```
 
-📦 File requirements.txt
+### 📦 File `requirements.txt`
 
-Tạo file backend/requirements.txt với nội dung:
-
+```txt
 fastapi
 uvicorn
 pymongo
 requests
 beautifulsoup4
 urllib3
+```
 
-🧱 Bước 1: Tạo môi trường ảo
-💻 macOS / Linux:
+### 🧱 Bước 1: Tạo môi trường ảo
+
+**💻 macOS / Linux:**
+
+```bash
 cd backend
 python3 -m venv venv
 source venv/bin/activate
+```
 
-🪟 Windows (PowerShell):
+**🪟 Windows (PowerShell):**
+
+```powershell
 cd backend
 python -m venv venv
 venv\Scripts\activate
+```
 
-🧩 Bước 2: Cài đặt thư viện
+### 🧩 Bước 2: Cài đặt thư viện
+
+```bash
 pip install -r requirements.txt
+```
 
-🍃 Bước 3: Cài đặt MongoDB
-👉 Tải về từ:
+### 🍃 Bước 3: Cài đặt MongoDB
 
-🔗 https://www.mongodb.com/try/download/community
+**👉 Tải về từ:** https://www.mongodb.com/try/download/community
 
-macOS: tải .tgz hoặc cài qua Homebrew:
+**macOS:** Tải `.tgz` hoặc cài qua Homebrew:
 
+```bash
 brew tap mongodb/brew
 brew install mongodb-community@7.0
 brew services start mongodb-community@7.0
+```
 
-Windows:
+**Windows:** Chạy file `.msi` → chọn **Run as service**
 
-Chạy file .msi tải về → chọn Run as service
+Sau khi cài, MongoDB sẽ tự chạy ở `mongodb://localhost:27017`
 
-Sau khi cài, MongoDB sẽ tự chạy ở mongodb://localhost:27017
+### 🚀 Bước 4: Chạy Backend Server
 
-🚀 Bước 4: Chạy Backend Server
+```bash
 uvicorn main:app --reload
+```
 
-Sau khi chạy, mở trình duyệt tại:
-👉 http://127.0.0.1:8000/docs
+**Kiểm tra:** Mở trình duyệt tại http://127.0.0.1:8000/docs  
+→ Sẽ thấy API docs (Swagger UI)
 
-Sẽ thấy API docs (Swagger UI).
+---
 
-🧱 2. Cài đặt Frontend (Next.js)
-📁 Cấu trúc thư mục:
+## 🖥 2. Cài đặt Frontend (Next.js)
+
+### 📁 Cấu trúc thư mục
+
+```
 frontend/
 ├── app/
-│ ├── layout.tsx
-│ ├── page.tsx
+│   ├── layout.tsx
+│   └── page.tsx
 ├── public/
-│ └── logo.svg
-├── package.json
+│   └── logo.svg
+└── package.json
+```
 
-🪄 Bước 1: Cài Node.js
+### 🪄 Bước 1: Cài Node.js
 
-Tải tại: https://nodejs.org/en/download
+**Tải tại:** https://nodejs.org/en/download  
+Chọn bản **LTS (Long Term Support)**
 
-Chọn bản LTS (Long Term Support)
+**Kiểm tra:**
 
-Kiểm tra cài đặt:
-
+```bash
 node -v
 npm -v
+```
 
-📦 Bước 2: Cài các package cần thiết
+### 📦 Bước 2: Cài các package
+
+```bash
 cd frontend
 npm install
+```
 
-🚀 Bước 3: Chạy giao diện
+### 🚀 Bước 3: Chạy giao diện
+
+```bash
 npm run dev
+```
 
-Sau đó truy cập:
-👉 http://localhost:3000
+**Truy cập:** http://localhost:3000
 
-🔁 3. Luồng hoạt động
-Thành phần Mô tả
-scraper.py Thu thập lịch từ trang UBND xã
-main.py Cung cấp API /daily, /weekly, /available_dates
-auto_sync() Tự động cập nhật dữ liệu mỗi 8 tiếng
-frontend/page.tsx Hiển thị giao diện chính
-frontend/layout.tsx Cấu trúc layout + favicon + tiêu đề trang
+---
+
+## 🔁 3. Luồng hoạt động
+
+| Thành phần            | Mô tả                                                |
+| --------------------- | ---------------------------------------------------- |
+| `scraper.py`          | Thu thập lịch từ trang UBND xã                       |
+| `main.py`             | Cung cấp API `/daily`, `/weekly`, `/available_dates` |
+| `auto_sync()`         | Tự động cập nhật dữ liệu mỗi 8 giờ                   |
+| `frontend/page.tsx`   | Hiển thị giao diện chính                             |
+| `frontend/layout.tsx` | Cấu trúc layout + favicon + tiêu đề trang            |
+
+---
+
+## 📌 Ghi chú
+
+- Backend mặc định chạy trên port **8000**
+- Frontend mặc định chạy trên port **3000**
+- Dữ liệu được lưu trong database `lich_cong_tac` trên MongoDB
+- Hệ thống tự động đồng bộ dữ liệu mỗi 8 giờ
