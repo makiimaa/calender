@@ -16,12 +16,10 @@ app.add_middleware(
 )
 
 @app.get("/daily")
-def get_daily(date_str: str | None = Query(None)):
-    day = date.fromisoformat(date_str) if date_str else date.today()
-    record = daily_col.find_one({"date": day.isoformat()}, {"_id": 0})
-    if record:
-        return record.get("daily", [])
-    return [] 
+def get_daily(date_str: str | None = Query(None, alias="date")):
+    target_date = date.fromisoformat(date_str) if date_str else datetime.today().date()
+    record = daily_col.find_one({"date": target_date.isoformat()}, {"_id": 0})
+    return record.get("daily", []) if record else []
 
 @app.get("/weekly")
 def get_weekly(date_str: str | None = Query(None)):
@@ -75,6 +73,6 @@ def auto_sync():
             sync_calendar()
         except Exception as e:
             print("[SYNC] Lỗi:", e)
-        time.sleep(30000) 
-
+        time.sleep(3600) 
+ 
 threading.Thread(target=auto_sync, daemon=True).start()
