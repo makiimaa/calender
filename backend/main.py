@@ -22,9 +22,9 @@ def get_daily(date_str: str | None = Query(None, alias="date")):
     return record.get("daily", []) if record else []
 
 @app.get("/weekly")
-def get_weekly(date_str: str | None = Query(None)):
-    day = date.fromisoformat(date_str) if date_str else date.today()
-    week_start = (day - timedelta(days=day.weekday())).isoformat()
+def get_weekly(date_str: str | None = Query(None, alias="date")):
+    target_date = date.fromisoformat(date_str) if date_str else datetime.today().date()
+    week_start = (target_date - timedelta(days=target_date.weekday())).isoformat()
     record = weekly_col.find_one({"week_start": week_start}, {"_id": 0})
     return record.get("weekly", []) if record else []
 
