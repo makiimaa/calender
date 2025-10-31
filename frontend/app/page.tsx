@@ -1,6 +1,9 @@
+/* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import "react-datepicker/dist/react-datepicker.css";
+import DatePicker from "react-datepicker";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -35,6 +38,7 @@ export default function Page() {
   const [weekly, setWeekly] = useState<any[]>([]);
   const [availableDates, setAvailableDates] = useState<string[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const [isPickerOpen, setIsPickerOpen] = useState(false);
 
   async function fetchData(dateStr: string) {
     try {
@@ -170,22 +174,7 @@ export default function Page() {
           }}
         >
           <button
-            onClick={() => {
-              const picker = document.getElementById(
-                "date-picker"
-              ) as HTMLInputElement;
-              if (picker) {
-                picker.style.visibility = "visible";
-                picker.style.opacity = "1";
-                picker.style.pointerEvents = "auto";
-                picker.showPicker?.();
-                setTimeout(() => {
-                  picker.style.visibility = "hidden";
-                  picker.style.opacity = "0";
-                  picker.style.pointerEvents = "none";
-                }, 300);
-              }
-            }}
+            onClick={() => setIsPickerOpen(!isPickerOpen)}
             style={{
               display: "flex",
               alignItems: "center",
@@ -202,38 +191,40 @@ export default function Page() {
             <span style={{ fontSize: "24px" }}>📅</span> Lịch ngày
           </button>
 
-          <input
-            id="date-picker"
-            type="date"
-            onChange={(e) => {
-              if (e.target.value) setSelectedDate(new Date(e.target.value));
-            }}
-            value={formatDate(selectedDate)}
-            max={todayStr}
-            style={{
-              position: "absolute",
-              top: "100%",
-              right: 0,
-              zIndex: 10,
-              transform: "translateY(10px)",
-              border: "1px solid #ccc",
-              borderRadius: "10px",
-              padding: "10px 15px",
-              fontSize: "16px",
-              boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
-              backgroundColor: "white",
-              visibility: "hidden",
-              opacity: 0,
-              pointerEvents: "none",
-              cursor: "pointer",
-              transition: "all 0.2s ease",
-            }}
-          />
+          {isPickerOpen && (
+            <div
+              style={{
+                position: "absolute",
+                top: "120%",
+                right: 0,
+                zIndex: 100,
+                transform: "scale(1.5)",
+                transformOrigin: "top right",
+                background: "white",
+                borderRadius: "12px",
+                boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+                padding: "10px",
+              }}
+            >
+              <DatePicker
+                selected={selectedDate}
+                onChange={(date: Date | null) => {
+                  if (date) {
+                    setSelectedDate(date);
+                    setIsPickerOpen(false);
+                  }
+                }}
+                inline
+                maxDate={new Date()}
+                locale="vi"
+              />
+            </div>
+          )}
         </div>
       </header>
 
       {/* ================= NỘI DUNG ================= */}
-      <main
+      {/* <main
         style={{
           flex: 1,
           display: "grid",
@@ -381,6 +372,157 @@ export default function Page() {
             animation-play-state: paused;
           }
           `}
+        </style>
+      </main> */}
+      <main
+        style={{
+          flex: 1,
+          display: "grid",
+          gridTemplateColumns: "1fr 3fr",
+          gap: "20px",
+          padding: "10px 20px 0",
+          alignItems: "start",
+        }}
+      >
+        <div
+          className="weekly-container"
+          style={{
+            backgroundColor: "white",
+            borderRadius: "12px",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+            overflow: "hidden",
+            height: "calc(100vh - 200px)",
+            position: "relative",
+          }}
+        >
+          <div
+            style={{
+              backgroundColor: "#a90000",
+              color: "white",
+              fontWeight: 700,
+              fontSize: "18px",
+              padding: "10px 15px",
+              textAlign: "center",
+            }}
+          >
+            Lịch trong tuần
+          </div>
+
+          <div
+            style={{
+              height: "100%",
+              overflowY: "hidden",
+              position: "relative",
+            }}
+          >
+            <div
+              className="scroll-content"
+              style={{
+                position: "absolute",
+                width: "100%",
+                animation: "scroll-up 50s linear infinite",
+              }}
+            >
+              {[...weekly, ...weekly].map((w, i) => (
+                <div
+                  key={i}
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "25% 20% 55%",
+                    borderBottom: "1px solid #eee",
+                    padding: "8px 12px",
+                    backgroundColor: i % 2 === 0 ? "#fff" : "#fafafa",
+                  }}
+                >
+                  <div style={{ textAlign: "center" }}>{w.day || "-"}</div>
+                  <div style={{ textAlign: "center" }}>{w.time || "-"}</div>
+                  <div>{w.content || ""}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div
+          style={{
+            backgroundColor: "white",
+            borderRadius: "12px",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+            overflow: "hidden",
+          }}
+        >
+          <div
+            style={{
+              backgroundColor: "#a90000",
+              color: "white",
+              fontWeight: 700,
+              fontSize: "18px",
+              padding: "10px 15px",
+            }}
+          >
+            Lịch trong ngày
+          </div>
+          <table
+            style={{
+              width: "100%",
+              borderCollapse: "collapse",
+              fontSize: "14px",
+            }}
+          >
+            <thead>
+              <tr style={{ backgroundColor: "#f0f0f0" }}>
+                <th style={{ padding: "8px" }}>Thời gian</th>
+                <th style={{ padding: "8px" }}>Nội dung</th>
+                <th style={{ padding: "8px" }}>Thành phần</th>
+                <th style={{ padding: "8px" }}>Địa điểm</th>
+              </tr>
+            </thead>
+            <tbody>
+              {daily.length > 0 ? (
+                daily.map((d, i) => (
+                  <tr
+                    key={i}
+                    style={{
+                      backgroundColor: i % 2 === 0 ? "#fff" : "#fafafa",
+                    }}
+                  >
+                    <td style={{ padding: "8px", textAlign: "center" }}>
+                      {d.time}
+                    </td>
+                    <td style={{ padding: "8px" }}>{d.content}</td>
+                    <td style={{ padding: "8px" }}>{d.participants}</td>
+                    <td style={{ padding: "8px" }}>{d.location}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td
+                    colSpan={4}
+                    style={{
+                      textAlign: "center",
+                      padding: "15px",
+                      fontStyle: "italic",
+                      color: "#555",
+                    }}
+                  >
+                    Không có lịch công tác cho ngày này
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        <style>
+          {`
+    @keyframes scroll-up {
+      0%   { transform: translateY(0); }
+      100% { transform: translateY(-50%); }
+    }
+    .weekly-container:hover .scroll-content {
+      animation-play-state: paused;
+    }
+    `}
         </style>
       </main>
 
